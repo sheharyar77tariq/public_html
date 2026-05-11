@@ -1,39 +1,24 @@
 # Local Setup Guide
 
-This project is a Laravel app.
+This project is a Laravel app with the web entrypoint at the repository root.
 
 - Project root: `public_html`
-- Laravel folder: `core`
-- Database file: `install/database.sql`
+- Laravel source folder: `core`
+- Database SQL file: `install/database.sql`
 
-## Personal Local Credentials
+## Requirements
 
-Use these credentials for your own local DVD copy:
-
-- MySQL host: `127.0.0.1`
-- MySQL port: `3306`
-- MySQL database: `lottery_local`
-- MySQL username: `root`
-- MySQL password: `Qwerty26`
-
-Admin panel login:
-
-- URL: `http://127.0.0.1:8080/admin`
-- Username: `admin`
-- Password: `admin`
-
-## 1) Install Requirements
-
-Make sure these are installed:
+Install these before you begin:
 
 - PHP 8+
 - Composer
 - Node.js + npm
-- MySQL (or MariaDB)
+- MySQL or MariaDB
+- Optional: XAMPP for Windows users
 
-## 2) Install Project Dependencies
+## 1) Install Dependencies
 
-Run in terminal:
+From the `core` folder:
 
 ```bash
 cd core
@@ -41,14 +26,31 @@ composer install
 npm install
 ```
 
-## 3) Setup Database
+If `composer install` fails, make sure Composer is installed and available in your PATH.
 
-1. Create a database (example: `lottery_local`)
-2. Import `install/database.sql` into that database
+## 2) Create the Database
 
-## 4) Update `.env`
+Create a database named `lottery_local`.
 
-Edit `core/.env`:
+Import `install/database.sql` into the database.
+
+If you use phpMyAdmin, import the file there.
+
+If you use the command line:
+
+```bash
+mysql -u root -p lottery_local < "../install/database.sql"
+```
+
+If your local MySQL root user has no password, use:
+
+```bash
+mysql -u root lottery_local < "../install/database.sql"
+```
+
+## 3) Configure `.env`
+
+Open `core/.env` and set:
 
 ```env
 APP_ENV=local
@@ -60,52 +62,79 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=lottery_local
 DB_USERNAME=root
-DB_PASSWORD=Qwerty26
+DB_PASSWORD=
 ```
 
-If app key is missing:
+> If your MySQL root user has a password, set `DB_PASSWORD` to that password.
+
+## 4) Generate the Application Key
+
+From `core`:
 
 ```bash
 php artisan key:generate
 ```
 
-## 5) Clear Cache
+## 5) Clear Laravel Cache
 
-Run inside `core`:
+From `core`:
 
 ```bash
 php artisan config:clear
 php artisan cache:clear
 ```
 
-## 6) Run Project
+## 6) Run the Project
 
-From `public_html` root:
+From the `public_html` root folder:
 
 ```bash
 php -S 127.0.0.1:8080
 ```
 
-Open:
+Open in your browser:
 
 - http://127.0.0.1:8080
 
-## Optional: Use Laravel Server
+## Admin Login
 
-From `core`:
+- Admin URL: `http://127.0.0.1:8080/admin`
+- Username: `admin`
+- Password: `admin`
+
+## Notes
+
+- `public_html/index.php` is the application entrypoint.
+- It loads the Laravel app from `core`.
+- If you prefer, you can also start Laravel from `core`:
 
 ```bash
 php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-Open:
-
-- http://127.0.0.1:8000
-
 ## Troubleshooting
 
-If you get `SQLSTATE[HY000] [2002]`:
+### Database access denied
 
-- Start MySQL service
-- Check DB credentials in `core/.env`
-- Make sure `install/database.sql` was imported
+If you see `SQLSTATE[HY000] [1045]`, update `core/.env` with the correct MySQL credentials and then run:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+### Missing dependencies
+
+If `vendor` is missing, run:
+
+```bash
+cd core
+composer install
+```
+
+If `node_modules` is missing, run:
+
+```bash
+cd core
+npm install
+```
