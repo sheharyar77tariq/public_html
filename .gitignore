@@ -1,0 +1,38 @@
+# Laravel
+/vendor/
+/node_modules/
+.env
+.env.backup
+.env.*.php
+.env.*.backup
+.cache
+.phpunit.result.cache
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Build files
+/public/hot
+/public/storage
+/storage/logs
+/storage/debugbar
+
+# Testing
+/coverage/
+.phpstan.baseline
+
+# Composer
+composer.lock
+package-lock.json
+
+# OS
+Thumbs.db
+.DS_Store
